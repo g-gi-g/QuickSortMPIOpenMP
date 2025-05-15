@@ -1,6 +1,6 @@
 #include "QuickSort.h"
 
-std::vector<int> QuickSort(std::vector<int> array)
+/*std::vector<int> QuickSort(std::vector<int> array)
 {
 	if (array.size() <= 1)
 		return array;
@@ -21,4 +21,28 @@ std::vector<int> QuickSort(std::vector<int> array)
 	sortedLeft.push_back(pivot);
 	sortedLeft.insert(sortedLeft.end(), sortedRight.begin(), sortedRight.end());
 	return sortedLeft;
+}*/
+
+void QuickSort(std::vector<int>& array, int left, int right)
+{
+    if (left >= right)
+        return;
+
+    int pivot = array[right]; 
+    int i = left - 1;
+
+    for (int j = left; j < right; ++j)
+    {
+        if (array[j] < pivot)
+        {
+            ++i;
+            std::swap(array[i], array[j]);
+        }
+    }
+
+    std::swap(array[i + 1], array[right]);
+    int pivotIndex = i + 1;
+
+    QuickSort(array, left, pivotIndex - 1);
+    QuickSort(array, pivotIndex + 1, right);
 }

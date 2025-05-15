@@ -1,7 +1,7 @@
 #include "QuickSortOpenMP.h"
 #include "QuickSort.h"
 
-std::vector<int> QuickSortTasksOpenMP(std::vector<int> array)
+/*std::vector<int> QuickSortTasksOpenMP(std::vector<int> array)
 {
 	if (array.size() <= 1)
 		return array;
@@ -105,4 +105,52 @@ std::vector<int> QuickSortOpenMP(std::vector<int> array)
 //	sortedLeft.push_back(pivot);
 //	sortedLeft.insert(sortedLeft.end(), sortedRight.begin(), sortedRight.end());
 //	return sortedLeft;
-//}
+//}*/
+
+std::vector<int> QuickSortOpenMP(std::vector<int>& array, int numThreads)
+{
+	int n = array.size();
+	int chunkSize = n / numThreads;
+	std::vector<std::vector<int>> chunks(numThreads);
+
+	// Тут масив ділиться на підмасиви
+	for (int i = 0; i < numThreads; ++i)
+	{
+		int start = i * chunkSize; 
+		int end = (i == numThreads - 1) ? n : (i + 1) * chunkSize; // n-1 ?
+
+		chunks[i] = std::vector<int>(array.begin() + start, array.begin() + end);
+	}
+
+	// Паралельно сортуємо кожну частину
+	#pragma omp parallel for num_threads(numThreads)
+	for (int i = 0; i < numThreads; ++i)
+	{
+		QuickSort(chunks[i], 0, chunks[i].size() - 1);
+	}
+
+	// Попарне злиття відсортованих частин
+	while (chunks.size() > 1)
+	{
+		std::vector<std::vector<int>> newChunks;
+
+		#pragma omp parallel for schedule(dynamic) num_threads(numThreads)
+		for (int i = 0; i < chunks.size() / 2; ++i)
+		{
+			std::vector<int> merged;
+			std::merge(chunks[2 * i].begin(), chunks[2 * i].end(),
+				chunks[2 * i + 1].begin(), chunks[2 * i + 1].end(),
+				std::back_inserter(merged));
+
+			#pragma omp critical
+			newChunks.push_back(std::move(merged));
+		}
+
+		if (chunks.size() % 2 == 1)
+			newChunks.push_back(std::move(chunks.back()));
+
+		chunks = std::move(newChunks);
+	}
+
+	return chunks[0]; // Відсортований масив
+}

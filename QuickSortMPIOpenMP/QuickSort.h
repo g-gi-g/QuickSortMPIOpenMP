@@ -1,3 +1,3 @@
 #include <vector>
 
-std::vector<int> QuickSort(std::vector<int> array);
+void QuickSort(std::vector<int>& array, int left, int right);
