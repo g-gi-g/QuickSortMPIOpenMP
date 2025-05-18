@@ -119,6 +119,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <OpenMPSupport>true</OpenMPSupport>
+      <AdditionalIncludeDirectories>E:\Program Files (x86)\Microsoft SDKs\MPI\Include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -126,6 +127,8 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <StackReserveSize>16000000</StackReserveSize>
+      <AdditionalDependencies>msmpi.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>E:\Program Files (x86)\Microsoft SDKs\MPI\Lib\x64</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
